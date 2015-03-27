@@ -41,7 +41,7 @@ def get_second_mesh(lat, lng):
 def get_third_mesh(lat, lng):
     second_mesh_code = get_second_mesh(lat, lng)
     left_operator = int(math.floor(
-                        (lng - second_mesh_code['lat']) * 1000000 / 8333
+                        (lat - second_mesh_code['lat']) * 1000000 / 8333
                         ))
     right_operator = int(math.floor(
                          (lng - second_mesh_code['lng']) * 10000 / 125
