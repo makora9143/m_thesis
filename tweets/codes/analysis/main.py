@@ -34,8 +34,8 @@ def append_grid(inputfile, outputfile):
 
 
 if __name__ == '__main__':
-    inputfile = '../csvfiles/raw_data/tokyo-20150101-20150131.csv'
-    outputpath = "../csvfiles/modify_data/tokyo_meshcode.csv"
+    inputfile = '../../csvfiles/raw_data/tokyo-20150101-20150131.csv'
+    outputpath = "../../csvfiles/modify_data/tokyo_meshcode.csv"
 
     append_grid(inputfile, outputpath)
 
