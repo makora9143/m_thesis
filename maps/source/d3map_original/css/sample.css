@@ -1,0 +1,88 @@
+html,body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+
+#buttons {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 99;
+}
+
+  #map {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+  }
+  .country {
+     fill-opacity: 1;
+     fill: #4682B4;
+     stroke-opacity: 1;
+     stroke: black;
+     stroke-width: 2px;
+  }
+
+    .country-gray {
+    fill: lightgray;
+    stroke: lightgray;
+    stroke-width: 1;
+  }
+
+  .country-red {
+    fill-opacity: .25;
+    fill: darkred;
+    stroke: black;
+    stroke-width: 1;
+  }
+    .capital {
+    fill: white;
+    stroke: black;
+    stroke-width: 2px;
+  }
+  #d3MapLayerBox {
+    position: absolute;
+    background: white;
+    color: gray;
+    border-radius: 5px;
+    border: 3px double gray;
+    box-shadow: 3px 3px black;
+    left: auto;
+    right: 20px;
+    top: 50px;
+  }
+
+  #d3MapPanBox {
+    top: 190px;
+    right: 68px;
+  }
+
+  #d3MapPanBox > button, #d3MapZoomBox > button {
+    border-radius: 15px;
+    background: white;
+    border: 3px double gray;
+    color: black;
+  }
+
+  #d3MapPanBox > button {
+      font-size: 14px;
+  }
+
+  #d3MapPanBox > button:hover, #d3MapZoomBox > button:hover {
+    color: white;
+    background: darkgray;
+  }
+
+  #d3MapZoomBox {
+    top: 160px;
+    right: 80px;
+  }
+
+  #d3MapZoomBox > .zoomcontrol {
+    position: absolute;
+  }
+
+  #d3MapZoomBox > #in {
+    position: relative;
+  }

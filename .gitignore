@@ -1,4 +1,7 @@
 *.pyc
 tweets/csvfiles
 maps/data
-
+maps/source/d3carto
+maps/source/d3map_original/csvfiles
+maps/source/d3map_original/*.csv
+maps/source/earthquake

@@ -3,6 +3,25 @@
 
 
 import math
+from datetime import timedelta, datetime
+
+
+def createnewfile(t):
+    filename = t.strftime('%Y%m%d%H%M%S')
+    return open(filename + ".csv", "wb")
+
+def split_csvfile(filepath):
+    """ 5分おきにCSVファイルを生成する """
+    t = datetime.strptime("2015-01-01 00:00:00", "%Y-%m-%d %H:%M:%S")
+    f = createnewfile(t)
+
+    for i in range(30 * 24 * 12):
+        for line in csvfile:
+            f.write(line)
+            if t < line:
+                t += timedelta(minutes=5)
+                createnewfile(t)
+                break
 
 
 def get_first_mesh(lat, lng):
