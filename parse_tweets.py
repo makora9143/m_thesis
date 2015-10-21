@@ -51,7 +51,7 @@ DATES = [
 
 ACCOUNTS = r'@[0-9a-zA-Z_]{1,15}'
 SYMBOLS = r'[\\\nwｗ]'
-URL = r'http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?'
+#URL = r'http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?'
 HASHTAG = r'[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー]+'
 
 COMPILERS = [
@@ -61,7 +61,7 @@ COMPILERS = [
         re.compile(HASHTAG)
         ]
 
-DATA = pd.read_csv(DATAPATH, quotechar='', names=NAMES)
+#DATA = pd.read_csv(DATAPATH, quotechar='', names=NAMES)
 
 
 TAGGER = MeCab.Tagger('-Owakati')
@@ -93,9 +93,9 @@ def create_model(filename):
 def treat_all_data(filename):
     all_data = []
     for date in DATES:
-        filename = DATAPATH+date+'.csv'
-        print filename
-        data = pd.read_csv(filename, quotechar='', names=NAMES)
+        fname = DATAPATH+date+'.csv'
+        print fname
+        data = pd.read_csv(fame, quotechar='', names=NAMES)
         texts = data.texts
         all_data += preprocessing(texts)
 
@@ -104,5 +104,7 @@ def treat_all_data(filename):
     print 'create model'
     create_model(filename)
 
+if __name__ == '__main__':
+    treat_all_data('all_tweet_corpus')
 
 # End of Line.
