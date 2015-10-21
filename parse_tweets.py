@@ -9,6 +9,7 @@ import pandas as pd
 from gensim.models import word2vec
 
 
+# DATAPATH = '/Users/makora/Dropbox/2015-06.csv'
 DATAPATH = ''
 NAMES = [
     'tweet_id',
@@ -51,7 +52,7 @@ DATES = [
 
 ACCOUNTS = r'@[0-9a-zA-Z_]{1,15}'
 SYMBOLS = r'[\\\nwｗ]'
-#URL = r'http(s)?://([\w-]+\.)+[\w-]+(/[\w- ./?%&=]*)?'
+URL = r'https?://[\w/:%#\$&\?\(\)~\.=\+\-]+'
 HASHTAG = r'[#＃][Ａ-Ｚａ-ｚA-Za-z一-鿆0-9０-９ぁ-ヶｦ-ﾟー]+'
 
 COMPILERS = [
@@ -61,15 +62,13 @@ COMPILERS = [
         re.compile(HASHTAG)
         ]
 
-#DATA = pd.read_csv(DATAPATH, quotechar='', names=NAMES)
-
 
 TAGGER = MeCab.Tagger('-Owakati')
 
 
 def preprocessing(texts):
     for compiler in COMPILERS:
-        texts = map(lambda text: compiler.sub('', text), texts)
+        texts = map(lambda t: compiler.sub('', t), texts)
 
     wakati_texts = map(TAGGER.parse, texts)
     return wakati_texts
@@ -95,9 +94,14 @@ def treat_all_data(filename):
     for date in DATES:
         fname = DATAPATH+date+'.csv'
         print fname
-        data = pd.read_csv(fame, quotechar='', names=NAMES)
-        texts = data.texts
+        data = pd.read_csv(fname, quotechar='', names=NAMES)
+        print 'loaded, now preprocessing'
+        texts = data.text
         all_data += preprocessing(texts)
+#    data = pd.read_csv(DATAPATH, quotechar='', names=NAMES)
+#    texts = data.text
+#    print 'loaded, now preprocessing'
+#    all_data += preprocessing(texts)
 
     print 'saving all data'
     save_file(all_data, filename)
