@@ -93,7 +93,7 @@ def treat_all_data(filename):
     all_data = []
     for date in DATES:
         fname = DATAPATH+date+'.csv'
-        print fname
+        print fname + ' is ',
         data = pd.read_csv(fname, quotechar='', names=NAMES)
         print 'loaded, now preprocessing'
         texts = data.text
