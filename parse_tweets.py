@@ -3,10 +3,13 @@
 
 
 import re
+import math
 
 import MeCab
 import pandas as pd
 from gensim.models import word2vec
+
+from m2_vae import M2_VAE
 
 
 # DATAPATH = '/Users/makora/Dropbox/2015-06.csv'
@@ -68,7 +71,8 @@ TAGGER = MeCab.Tagger('-Owakati')
 
 def preprocessing(texts):
     for compiler in COMPILERS:
-        texts = map(lambda t: compiler.sub('', t), texts)
+#        texts = map(lambda t: compiler.sub('', t), texts)
+        texts = [compiler.sub('', text) for text in texts if not math.isnan(text)]
 
     wakati_texts = map(TAGGER.parse, texts)
     return wakati_texts
@@ -107,6 +111,60 @@ def treat_all_data(filename):
     save_file(all_data, filename)
     print 'create model'
     create_model(filename)
+
+
+def load_dataset_tweets(filename=None):
+    pass
+
+
+def text2vector(w2w, tweets):
+    pass
+
+
+def split_datasets(dataset):
+    pass
+
+
+def train_vae_model(model_file):
+    w2w = word2vec.Word2Vec.load(model_file)
+
+    tweets, locations = load_dataset_tweets()
+
+    tweets = text2vector(w2w, tweets=tweets)
+
+    train_tweets, test_tweets, train_locations, test_locations = split_datasets(tweets, locations, 0.8)
+
+    train_tweets, valid_tweets, train_locations, valid_tweets = split_datasets(train_tweets, train_locations, 0.9)
+
+    all_params = {
+        'hyper_params': {
+            'rng_seed'          : 1234,
+            'dim_z'             : 50,
+            'n_hidden'          : [500, 500],
+            'n_mc_sampling'     : 1,
+            'scale_init'        : 0.01,
+            'nonlinear_q'       : 'softplus',
+            'nonlinear_p'       : 'softplus',
+            'type_px'           : 'bernoulli',
+            'optimizer'         : 'adam',
+            'learning_process'  : 'early_stopping'
+        },
+        'optimize_params': {
+            'learning_rate'        : 1e-4,
+            'n_iters'              : 1000,
+            'minibatch_size'       : 1000,
+            'calc_history'         : 'all',
+            'calc_hist'            : 'all',
+            'n_mod_history'        : 100,
+            'n_mod_hist'           : 100,
+            'patience'             : 5000,
+            'patience_increase'    : 2,
+            'improvement_threshold': 1.005,
+        }
+    }
+    vae = M2_VAE(**all_params)
+    vae.fit(train_tweets, train_locations)
+
 
 if __name__ == '__main__':
     treat_all_data('all_tweet_corpus')
