@@ -128,14 +128,14 @@ def treat_all_data(filename):
     create_model(filename)
 
 
-def create_location_data():
+def create_location_data(mode=None):
     GS = pd.read_csv(GEOHASH_DB, names=GEONAMES)
-    for date in DATES:
-        fname = DATAPATH + date + '.csv'
-#    for i in range(1):
-#        fname = DATAPATH
-        f = open(DATAPATH + date + "_location.csv", 'ab')
-#        f = open('./location.csv', 'ab')
+#    for date in DATES:
+#        fname = DATAPATH + date + '.csv'
+    for i in range(1):
+        fname = DATAPATH
+#        f = open(DATAPATH + date + "_location.csv", 'ab')
+        f = open('./location.csv', 'ab')
         csvwriter = csv.writer(f)
         print fname
         datas = pd.read_csv(open(fname, 'rU'), quotechar='', names=NAMES)
@@ -144,12 +144,22 @@ def create_location_data():
         lngs = datas.lng
         locations = []
 
-        for lat, lng in zip(lats, lngs):
-            geohash_code = geohash.encode(lat, lng)
-            target = GS[GS.geohash == geohash_code]
-            locations.append([lat, lng,
-                              target.pref, target.city,
-                              jpgrid.encodeLv1(lat, lng), jpgrid.encodeLv2(lat, lng)])
+        
+        locations = [(lat, lng) for lat, lng in zip(lats, lngs)]
+
+#        for lat, lng in zip(lats, lngs):
+#            geohash_code = geohash.encode(lat, lng)
+#            target = GS[GS.geohash == geohash_code]
+#            if mode == 'pref':
+#                locations.append([target.pref])
+#            elif mode == 'city':
+#                locations.append([target.city])
+#            elif mode =='g1':
+#                locations.append([jpgrid.encodeLv1(lat, lng)])
+#            elif mode == 'g2':
+#                locations.append([jpgrid.encodeLv2(lat, lng)])
+#            else:
+#                locations.append([lat, lng])
         print "write file"
         csvwriter.writerows(locations)
         f.close()
