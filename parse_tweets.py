@@ -130,12 +130,12 @@ def treat_all_data(filename):
 
 def create_location_data():
     GS = pd.read_csv(GEOHASH_DB, names=GEONAMES)
-#    for date in DATES:
-#        fname = DATAPATH + date + '.csv'
-    for i in range(1):
-        fname = DATAPATH
-#        f = open(fname + "_location.csv")
-        f = open('./location.csv', 'ab')
+    for date in DATES:
+        fname = DATAPATH + date + '.csv'
+#    for i in range(1):
+#        fname = DATAPATH
+        f = open(DATAPATH + date + "_location.csv", 'ab')
+#        f = open('./location.csv', 'ab')
         csvwriter = csv.writer(f)
         print fname
         datas = pd.read_csv(open(fname, 'rU'), quotechar='', names=NAMES)
