@@ -134,7 +134,10 @@ def create_location_data(mode=None):
 #        fname = DATAPATH + date + '.csv'
     for i in range(1):
         fname = DATAPATH
-#        f = open(DATAPATH + date + "_location.csv", 'ab')
+#        f = open(DATAPATH + date + "_geogrid1.csv", 'ab')
+#        f = open(DATAPATH + date + "_geogrid2.csv", 'ab')
+#        f = open(DATAPATH + date + "_pref.csv", 'ab')
+#        f = open(DATAPATH + date + "_city.csv", 'ab')
         f = open('./location.csv', 'ab')
         csvwriter = csv.writer(f)
         print fname
@@ -145,7 +148,11 @@ def create_location_data(mode=None):
         locations = []
 
         
-        locations = [(lat, lng) for lat, lng in zip(lats, lngs)]
+        #locations = [(lat, lng) for lat, lng in zip(lats, lngs)]
+        #locations = [[jpgrid.encodeLv1(lat, lng)] for lat, lng in zip(lats, lngs)]
+        #locations = [[jpgrid.encodeLv2(lat, lng)] for lat, lng in zip(lats, lngs)]
+        #locations = [[GS[GS.geohash == geohash.encode(lat, lng)].pref] for lat, lng in zip(lats, lngs)]
+        #locations = [[GS[GS.geohash == geohash.encode(lat, lng)].city] for lat, lng in zip(lats, lngs)]
 
 #        for lat, lng in zip(lats, lngs):
 #            geohash_code = geohash.encode(lat, lng)
