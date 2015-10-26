@@ -4,16 +4,22 @@
 
 import re
 import math
+import csv
 
 import MeCab
+import geohash
+import jpgrid
 import pandas as pd
+import numpy as np
+from sklearn.cross_validation import train_test_split
 from gensim.models import word2vec
 
 from m2_vae import M2_VAE
 
 
-# DATAPATH = '/Users/makora/Dropbox/2015-06.csv'
-DATAPATH = ''
+GEOHASH_DB = '/Users/makora/Dropbox/geohash.csv'
+DATAPATH = '/Users/makora/Dropbox/2015-06.csv'
+#DATAPATH = ''
 NAMES = [
     'tweet_id',
     'screen_name',
@@ -26,6 +32,16 @@ NAMES = [
     'date'
 ]
 
+GEONAMES = [
+    'geohash',
+    'lat',
+    'lng',
+    'pref',
+    'branch',
+    'city',
+    'town',
+    'postnum'
+]
 
 DATES = [
     "2013-11",
@@ -71,7 +87,6 @@ TAGGER = MeCab.Tagger('-Owakati')
 
 def preprocessing(texts):
     for compiler in COMPILERS:
-#        texts = map(lambda t: compiler.sub('', t), texts)
         texts = [compiler.sub('', text) for text in texts if not math.isnan(text)]
 
     wakati_texts = map(TAGGER.parse, texts)
@@ -113,16 +128,50 @@ def treat_all_data(filename):
     create_model(filename)
 
 
+def create_location_data():
+    GS = pd.read_csv(GEOHASH_DB, names=GEONAMES)
+#    for date in DATES:
+#        fname = DATAPATH + date + '.csv'
+    for i in range(1):
+        fname = DATAPATH
+#        f = open(fname + "_location.csv")
+        f = open('./location.csv', 'ab')
+        csvwriter = csv.writer(f)
+        print fname
+        datas = pd.read_csv(open(fname, 'rU'), quotechar='', names=NAMES)
+        print 'load data'
+        lats = datas.lat
+        lngs = datas.lng
+        locations = []
+
+        for lat, lng in zip(lats, lngs):
+            geohash_code = geohash.encode(lat, lng)
+            target = GS[GS.geohash == geohash_code]
+            locations.append([lat, lng,
+                              target.pref, target.city,
+                              jpgrid.encodeLv1(lat, lng), jpgrid.encodeLv2(lat, lng)])
+        print "write file"
+        csvwriter.writerows(locations)
+        f.close()
+
+
 def load_dataset_tweets(filename=None):
     pass
 
 
-def text2vector(w2w, tweets):
-    pass
+def get_sentence_vector(model, sentence):
+    words = TAGGER.parse(sentence)
+    vector = np.array([])
+    for word in words:
+        vector += model[word]
+    return vector
 
 
-def split_datasets(dataset):
-    pass
+def text2vector(model, texts):
+    vectors = []
+    for text in texts:
+        vectors.append(get_sentence_vector(model, text))
+    return vectors
 
 
 def train_vae_model(model_file):
@@ -130,11 +179,11 @@ def train_vae_model(model_file):
 
     tweets, locations = load_dataset_tweets()
 
-    tweets = text2vector(w2w, tweets=tweets)
+    tweets = text2vector(model=w2w, texts=tweets)
 
-    train_tweets, test_tweets, train_locations, test_locations = split_datasets(tweets, locations, 0.8)
+    train_tweets, test_tweets, train_locations, test_locations = train_test_split(tweets, locations, train_size=0.8, random_state=1234)
 
-    train_tweets, valid_tweets, train_locations, valid_tweets = split_datasets(train_tweets, train_locations, 0.9)
+    train_tweets, valid_tweets, train_locations, valid_tweets = train_test_split(train_tweets, train_locations, train_size=0.9, random_state=1234)
 
     all_params = {
         'hyper_params': {
